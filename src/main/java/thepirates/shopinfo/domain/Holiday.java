@@ -2,12 +2,14 @@ package thepirates.shopinfo.domain;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Holiday {
 
     @Id @GeneratedValue
@@ -21,7 +23,6 @@ public class Holiday {
 
     public void setShop(Shop shop) {
         this.shop = shop;
-        shop.getHolidays().add(this);
     }
     @Builder
     private Holiday(Long id, LocalDate date) {

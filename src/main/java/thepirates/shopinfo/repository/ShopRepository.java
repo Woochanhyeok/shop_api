@@ -1,6 +1,7 @@
 package thepirates.shopinfo.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import thepirates.shopinfo.domain.Shop;
 
@@ -25,8 +26,9 @@ public class ShopRepository {
         return em.find(Shop.class, id);
     }
 
-    public List<Shop> findAll () {
-        return em.createQuery("select s from Shop s", Shop.class)
+    //level을 기준으로 오름차순으로 정렬해서 전체 Shop 리스트 반환
+    public List<Shop> findAllOrderByLevel() {
+        return em.createQuery("select s from Shop s order by s.level", Shop.class)
                 .getResultList();
     }
 

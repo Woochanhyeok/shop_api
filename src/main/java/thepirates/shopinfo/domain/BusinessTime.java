@@ -2,12 +2,14 @@ package thepirates.shopinfo.domain;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalTime;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class BusinessTime {
     @Id @GeneratedValue
     @Column(name="business_time_id")
@@ -22,7 +24,6 @@ public class BusinessTime {
 
     public void setShop(Shop shop) {
         this.shop = shop;
-        shop.getBusinessTimes().add(this);
     }
 
     @Builder

@@ -9,6 +9,7 @@ import thepirates.shopinfo.domain.BusinessTime;
 import thepirates.shopinfo.domain.HolidayForm;
 import thepirates.shopinfo.domain.Shop;
 import thepirates.shopinfo.domain.ShopForm;
+import thepirates.shopinfo.service.BusinessTimeService;
 import thepirates.shopinfo.service.HolidayService;
 import thepirates.shopinfo.service.ShopService;
 
@@ -24,14 +25,12 @@ public class RegisterController {
 
     private final ShopService shopService;
     private final HolidayService holidayService;
+    private final BusinessTimeService businessTimeService;
 
     @PostMapping("/register/shop")
     public Long registerShop(@RequestBody ShopForm shopForm){
-        log.info("JSON DATA : " + shopForm.getPhone());
-        log.info("BUSINESS TIMES : " + shopForm.getBusinessTimes().size());
-        shopForm.getBusinessTimes().forEach(businessTimeForm ->
-                log.info("Data : " + businessTimeForm.getDay() + " " + businessTimeForm.getOpen() + " " + businessTimeForm.getClose()));
 
+        //받아온 ShopForm으로 Shop 엔티티 생성
         Shop shop = Shop.builder()
                 .name(shopForm.getName())
                 .owner(shopForm.getOwner())
@@ -40,13 +39,17 @@ public class RegisterController {
                 .address(shopForm.getAddress())
                 .phone(shopForm.getPhone())
                 .build();
+        Long shopId = shopService.save(shop);
+        //ShopForm의 BusinessTimes 리스트로 BusinessTimes 엔티티 생성
+        shopForm.getBusinessTimes().forEach(businessTimeForm -> {
+            businessTimeService.save(shopId, BusinessTime.builder()
+                    .day(businessTimeForm.getDay())
+                    .open(LocalTime.parse(businessTimeForm.getOpen()))      //문자열로 들어오는 시간 LocalTime으로 파싱
+                    .close(LocalTime.parse(businessTimeForm.getClose()))
+                    .build());
+        });
         log.info("SHOP : " + shop.getBusinessTimes().size());
-        shopForm.getBusinessTimes().forEach(businessTimeForm -> shop.getBusinessTimes().add(BusinessTime.builder()
-                                                                                                .day(businessTimeForm.getDay())
-                                                                                                .open(LocalTime.parse(businessTimeForm.getOpen()))
-                                                                                                .close(LocalTime.parse(businessTimeForm.getClose())).build()
-        ));
-        return shopService.save(shop);
+        return shopId;
     }
 
     @PostMapping("/register/holiday")
