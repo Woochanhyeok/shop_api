@@ -1,22 +1,15 @@
 package thepirates.shopinfo.controller;
 
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import thepirates.shopinfo.domain.BusinessTime;
-import thepirates.shopinfo.domain.HolidayForm;
+import thepirates.shopinfo.domain.Form.HolidayForm;
 import thepirates.shopinfo.domain.Shop;
-import thepirates.shopinfo.domain.ShopForm;
+import thepirates.shopinfo.domain.Form.ShopForm;
 import thepirates.shopinfo.service.BusinessTimeService;
 import thepirates.shopinfo.service.HolidayService;
 import thepirates.shopinfo.service.ShopService;
-
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,8 +37,8 @@ public class RegisterController {
         shopForm.getBusinessTimes().forEach(businessTimeForm -> {
             businessTimeService.save(shopId, BusinessTime.builder()
                     .day(businessTimeForm.getDay())
-                    .open(LocalTime.parse(businessTimeForm.getOpen()))      //문자열로 들어오는 시간 LocalTime으로 파싱
-                    .close(LocalTime.parse(businessTimeForm.getClose()))
+                    .open(businessTimeForm.getOpen())      //문자열로 들어오는 시간 LocalTime으로 파싱
+                    .close(businessTimeForm.getClose())
                     .build());
         });
         log.info("SHOP : " + shop.getBusinessTimes().size());

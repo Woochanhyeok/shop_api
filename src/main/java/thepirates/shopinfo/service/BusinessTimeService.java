@@ -20,7 +20,7 @@ public class BusinessTimeService {
     public Long save(Long id, BusinessTime businessTime) {
         Shop shop = shopRepository.findById(id);
         shop.getBusinessTimes().add(businessTime);
-        businessTime.setShop(shop);
+//        businessTime.setShop(shop);
         businessTimeRepository.save(businessTime);
         return businessTime.getId();
     }

@@ -32,7 +32,7 @@ public class HolidayService {
         holidays.forEach(holidayDate -> {
             Holiday holiday = Holiday.builder().date(holidayDate).build();
             shop.getHolidays().add(holiday);
-            holiday.setShop(shop);
+//            holiday.setShop(shop);
             save(holiday);
         });
         return holidays.size();

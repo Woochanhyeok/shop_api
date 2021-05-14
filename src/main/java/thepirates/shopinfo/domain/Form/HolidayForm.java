@@ -1,4 +1,4 @@
-package thepirates.shopinfo.domain;
+package thepirates.shopinfo.domain.Form;
 
 import lombok.Getter;
 

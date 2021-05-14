@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Shop {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="shop_id")
     private Long id;
 
@@ -25,10 +25,10 @@ public class Shop {
     private String address;
     private String phone;
 
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<BusinessTime> businessTimes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Holiday> holidays = new ArrayList<>();
 
     //== holiday 설정 ==

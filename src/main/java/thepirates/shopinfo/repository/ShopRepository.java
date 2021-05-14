@@ -22,6 +22,14 @@ public class ShopRepository {
         }
     }
 
+
+
+    public void delete (Shop shop) {
+        em.createQuery("delete from Shop s where s.id = :id")
+                .setParameter("id", shop.getId())
+                .executeUpdate();
+    }
+
     public Shop findById(Long id) {
         return em.find(Shop.class, id);
     }

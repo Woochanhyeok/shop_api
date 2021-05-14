@@ -2,11 +2,15 @@ package thepirates.shopinfo.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import thepirates.shopinfo.domain.BusinessTime;
+import thepirates.shopinfo.domain.Form.IdForm;
+import thepirates.shopinfo.domain.Form.InfoBusinessDayForm;
+import thepirates.shopinfo.domain.Form.InfoForm;
 import thepirates.shopinfo.domain.Holiday;
-import thepirates.shopinfo.domain.ListForm;
+import thepirates.shopinfo.domain.Form.ListForm;
 import thepirates.shopinfo.domain.Shop;
 import thepirates.shopinfo.repository.ShopRepository;
 
@@ -25,91 +29,124 @@ public class ShopService {
 
     private final ShopRepository shopRepository;
     private final HolidayService holidayService;
+    private String[] week = {"Sonday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
 
     @Transactional
     public Long save(Shop shop) {
         shopRepository.save(shop);
         return shop.getId();
     }
-    //calendar 클래스로 받아온 요일값은 int형이므로 문자열로 변환해주는 함수
-    public String convertDayOfWeek (int num) {
-        String dayOfWeek ="";
-        switch(num) {
-            case 1:
-                dayOfWeek = "Sonday";
-                break;
-            case 2:
-                dayOfWeek = "Monday";
-                break;
-            case 3:
-                dayOfWeek = "TuesDay";
-                break;
-            case 4:
-                dayOfWeek = "Wednesday";
-                break;
-            case 5:
-                dayOfWeek = "Thursday";
-                break;
-            case 6:
-                dayOfWeek = "Friday";
-                break;
-            case 7:
-                dayOfWeek = "Saturday";
-        }
-        return dayOfWeek;
+
+    @Transactional
+    public Long delete(Shop shop) {
+        shopRepository.delete(shop);
+        return shop.getId();
     }
+
+    public Shop findOne(Long id) {
+        return shopRepository.findById(id);
+    }
+
+
+    //현재 영업 상태를 반환해주는 함수       요일                 오늘로부터 몇번째 날짜인가?
+    public String getStatus(Shop shop, String dayOfWeek,int dayCount) {
+
+        List<BusinessTime> businessTimes = shop.getBusinessTimes();
+        List<Holiday> holidays = shop.getHolidays();
+        String status = "CLOSE";
+
+        //open, close 시간 확인
+        for(BusinessTime businessTime : businessTimes) {
+            //해당 요일의 businessTime만 확인
+            if(businessTime.getDay().equals(dayOfWeek)) {
+                // hh:mm 형태를 hhmm형태로 변환
+                String []open_arr = businessTime.getOpen().split(":");
+                String []close_arr = businessTime.getClose().split(":");
+                int open = Integer.parseInt(open_arr[0]+open_arr[1]);
+                int close = Integer.parseInt(close_arr[0]+close_arr[1]);
+                int now = Integer.parseInt(LocalTime.now().format(DateTimeFormatter.ofPattern("HHmm")));
+                //현재 시간이 businessTime 안쪽일 경우
+                if(open < now && now < close)
+                    status = "OPEN";
+            }
+        }
+        //휴무인지 확인
+        for(Holiday holiday : holidays) {
+            if(holiday.getDate().isEqual(LocalDate.now().plusDays(dayCount))) {
+                status = "HOLIDAY";
+            }
+        }
+        return status;
+    }
+
+
     //모든 Shop 데이터를 ListForm의 List 형태로 변환 후 반환
     public List<ListForm> findAllList() {
-        //캘린더 객체 생성해서 현재 요일 가져옴
-        Calendar cal = Calendar.getInstance();
-        String dayOfWeek = convertDayOfWeek(cal.get(Calendar.DAY_OF_WEEK));
-
         List<ListForm> listForms = new ArrayList<>();
         List<Shop> shops = shopRepository.findAllOrderByLevel();
+        //캘린더 객체 생성해서 현재 요일 가져옴
+        Calendar cal = Calendar.getInstance();
+        String dayOfWeek = week[cal.get(Calendar.DAY_OF_WEEK)-1];
 
         for(Shop shop : shops) {
-            List<BusinessTime> businessTimes = shop.getBusinessTimes();
-            List<Holiday> holidays = shop.getHolidays();
-            String status = "CLOSE";
-
-            //open, close 시간 확인
-            log.info("Businesstime Size : " + businessTimes.size());
-            for(BusinessTime businessTime : businessTimes) {
-                //해당 요일의 businessTime만 확인
-                log.info("businesstime get day : " + businessTime.getDay());
-                log.info("dayofweek : " + dayOfWeek);
-                if(businessTime.getDay().equals(dayOfWeek)) {
-                    LocalTime open = businessTime.getOpen();
-                    LocalTime close = businessTime.getClose();
-                    LocalTime now = LocalTime.parse(LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
-
-                    log.info("Open : " + open);
-                    log.info("Now : " + now);
-                    log.info("Close : " + close);
-                    log.info("IF : " + now.isBefore(open));
-                    log.info("IF2 : " + now.isAfter(close));
-                    //현재 시간이 businessTime 안쪽일 경우
-                    if(open.isBefore(now) && now.isBefore(close))
-                        status = "OPEN";
-                }
-            }
-            //휴무인지 확인
-            for(Holiday holiday : holidays) {
-                if(holiday.getDate().isEqual(LocalDate.now())) {
-                    status = "HOLIDAY";
-                }
-            }
-            log.info("STATUS : " + status);
-
-
             ListForm listForm = ListForm.builder()
                     .name(shop.getName())
                     .description(shop.getDescription())
-                    .businessStatus(status)
+                    .businessStatus(getStatus(shop,dayOfWeek, 0))        //shop을 매개변수로 현재 영업 상태를 가져옴
                     .build();
             listForms.add(listForm);
         }
-
         return listForms;
+    }
+
+    public InfoForm getInfo(IdForm idForm) {
+        Shop shop = shopRepository.findById(idForm.getId());
+
+
+        String dayOfWeek = "";
+        Calendar cal = Calendar.getInstance();
+        //현재 가게의 영업 시간 가져옴
+        List<BusinessTime> businessTimes = shop.getBusinessTimes();
+
+        //오늘과 가장 가까운 영업 요일 찾기 (오늘이 주말일 수도 있으니)
+        int index = 0;
+        int weekNum = cal.get(Calendar.DAY_OF_WEEK)-1;
+        List<InfoBusinessDayForm> infoBusinessDayForms = new ArrayList<>();
+        //현재 요일부터 일주일 순회
+        //
+        int count = 0;
+        for(int i=weekNum; i<week.length; i++) {
+            dayOfWeek = week[i];
+            log.info("WEEK : " + dayOfWeek);
+            log.info("index : " + i);
+            for(BusinessTime businessTime : businessTimes) {
+                if(businessTime.getDay().equals(dayOfWeek)) {
+                    InfoBusinessDayForm infoBusinessDayForm = InfoBusinessDayForm.builder().day(businessTime.getDay())
+                            .open(businessTime.getOpen())
+                            .close(businessTime.getClose())
+                            .status(getStatus(shop,dayOfWeek,count))
+                            .build();
+                    infoBusinessDayForms.add(infoBusinessDayForm);
+                    count++;
+                }
+            }
+            if(count == 3) {
+                break;
+            }
+
+            if(i==6)
+                i=0;
+        }
+
+        InfoForm infoForm = InfoForm.builder()
+                .id(shop.getId())
+                .name(shop.getName())
+                .description(shop.getDescription())
+                .address(shop.getAddress())
+                .phone(shop.getPhone())
+                .infoBusinessDayForms(infoBusinessDayForms)
+                .build();
+
+        return infoForm;
     }
 }
