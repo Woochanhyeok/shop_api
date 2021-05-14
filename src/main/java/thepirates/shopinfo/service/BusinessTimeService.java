@@ -19,8 +19,8 @@ public class BusinessTimeService {
     @Transactional
     public Long save(Long id, BusinessTime businessTime) {
         Shop shop = shopRepository.findById(id);
+        //해당 id의 shop에 businessTime 추가
         shop.getBusinessTimes().add(businessTime);
-//        businessTime.setShop(shop);
         businessTimeRepository.save(businessTime);
         return businessTime.getId();
     }

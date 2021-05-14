@@ -3,7 +3,6 @@ package thepirates.shopinfo.repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import thepirates.shopinfo.domain.BusinessTime;
-import thepirates.shopinfo.domain.Holiday;
 
 import javax.persistence.EntityManager;
 

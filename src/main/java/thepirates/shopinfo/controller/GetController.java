@@ -5,10 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import thepirates.shopinfo.domain.Form.IdForm;
 import thepirates.shopinfo.domain.Form.InfoForm;
 import thepirates.shopinfo.domain.Form.ListForm;
-import thepirates.shopinfo.domain.Shop;
 import thepirates.shopinfo.service.ShopService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

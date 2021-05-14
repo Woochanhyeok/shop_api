@@ -5,7 +5,10 @@ import lombok.Getter;
 
 import java.util.List;
 
+//점포 추가할 때, 요청으로 들어올 형태
+
 @Getter
+@Builder
 public class ShopForm {
 
     private String name;
@@ -16,16 +19,5 @@ public class ShopForm {
     private String phone;
 
     private List<BusinessTimeForm> businessTimes;
-
-    @Builder
-    public ShopForm(String name, String owner, String description, int level, String address, String phone, List<BusinessTimeForm> businessTimeForms) {
-        this.name = name;
-        this.owner = owner;
-        this.description = description;
-        this.level = level;
-        this.address = address;
-        this.phone = phone;
-        this.businessTimes = businessTimeForms;
-    }
 
 }

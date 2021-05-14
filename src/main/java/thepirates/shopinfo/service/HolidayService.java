@@ -28,11 +28,12 @@ public class HolidayService {
     @Transactional
     public int registerHolidays(Long id, List<LocalDate> holidays) {
         Shop shop = shopRepository.findById(id);
-
+        if(shop == null)
+            return 0;
+        //해당 id로 찾은 shop에 holiday 추가
         holidays.forEach(holidayDate -> {
             Holiday holiday = Holiday.builder().date(holidayDate).build();
             shop.getHolidays().add(holiday);
-//            holiday.setShop(shop);
             save(holiday);
         });
         return holidays.size();

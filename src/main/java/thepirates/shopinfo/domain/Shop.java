@@ -3,7 +3,6 @@ package thepirates.shopinfo.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -30,11 +29,6 @@ public class Shop {
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Holiday> holidays = new ArrayList<>();
-
-    //== holiday 설정 ==
-//    public void setHolidays(List<Holiday> holidays) {
-//        this.holidays = holidays;
-//    }
 
     @Builder
     private Shop(Long id, String name, String owner, String description,

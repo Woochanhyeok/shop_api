@@ -1,7 +1,6 @@
 package thepirates.shopinfo.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import thepirates.shopinfo.domain.Shop;
 
@@ -21,8 +20,6 @@ public class ShopRepository {
             em.merge(shop);
         }
     }
-
-
 
     public void delete (Shop shop) {
         em.createQuery("delete from Shop s where s.id = :id")
