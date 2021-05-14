@@ -9,6 +9,7 @@ import thepirates.shopinfo.Exception.OpenEqualsCloseException;
 import thepirates.shopinfo.domain.Form.*;
 import thepirates.shopinfo.domain.Shop;
 
+import javax.persistence.Id;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +112,9 @@ class ShopServiceTest {
     @Test
     public void 점포_상세_조회() throws Exception {
         //given
-        String name = shopService.getInfo(IdForm.builder().id(1L).build()).getName();
+        IdForm idForm = new IdForm();
+        idForm.setId(1L);
+        String name = shopService.getInfo(idForm).getName();
 
         //then
         Assertions.assertEquals(name, "인어수산");
