@@ -14,7 +14,7 @@
 * API Test
   - Postman
 * 설치
-  - https://github.com/Woochanhyeok/thepirates.git
+  - git clone https://github.com/Woochanhyeok/thepirates.git
 * DB
   - h2
     1. h2 콘솔 실행
