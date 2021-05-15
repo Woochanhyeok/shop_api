@@ -14,5 +14,5 @@ public class InfoForm {
     private String address;
     private String phone;
 
-    private List<InfoBusinessDayForm> infoBusinessDayForms;
+    private List<InfoBusinessDayForm> businessDays;
 }

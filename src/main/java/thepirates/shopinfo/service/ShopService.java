@@ -134,7 +134,7 @@ public class ShopService {
         //오늘과 가장 가까운 영업 요일 찾기 (오늘이 주말일 수도 있으니)
         int index = 0;
         int weekNum = cal.get(Calendar.DAY_OF_WEEK)-1;
-        List<InfoBusinessDayForm> infoBusinessDayForms = new ArrayList<>();
+        List<InfoBusinessDayForm> businessDays = new ArrayList<>();
         //현재 요일부터 일주일 순회
         int count = 0;
         for(int i=weekNum; i<week.length; i++) {
@@ -142,12 +142,12 @@ public class ShopService {
 
             for(BusinessTime businessTime : businessTimes) {
                 if(businessTime.getDay().equals(dayOfWeek)) {
-                    InfoBusinessDayForm infoBusinessDayForm = InfoBusinessDayForm.builder().day(businessTime.getDay())
+                    InfoBusinessDayForm businessDay = InfoBusinessDayForm.builder().day(businessTime.getDay())
                             .open(businessTime.getOpen())
                             .close(businessTime.getClose())
                             .status(getStatus(shop,dayOfWeek,count))
                             .build();
-                    infoBusinessDayForms.add(infoBusinessDayForm);
+                    businessDays.add(businessDay);
                     count++;
                 }
             }
@@ -166,7 +166,7 @@ public class ShopService {
                 .description(shop.getDescription())
                 .address(shop.getAddress())
                 .phone(shop.getPhone())
-                .infoBusinessDayForms(infoBusinessDayForms)
+                .businessDays(businessDays)
                 .build();
 
         return infoForm;
