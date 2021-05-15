@@ -19,7 +19,7 @@
   - h2
     1. h2 콘솔 실행
     2. JDBC URL에 **jdbc:h2:~/shopinfo** 입력하고 연결 (shopinfo.mv.db  DB파일 생성)
-    3. 한 번 연결해서 DB 파일(shopinfo.mv.db) 생성 후에 연결할  JDBC URL에 **jdbc:h2:tcp://localhost/~/shopinfo** 입력하고 연결 (tcp 연결)
+    3. 한 번 연결해서 DB 파일(shopinfo.mv.db) 생성 후에 재연결할 경우 JDBC URL에 **jdbc:h2:tcp://localhost/~/shopinfo** 입력하고 연결 (tcp 연결)
 
 ***
 테이블 생성 SQL
