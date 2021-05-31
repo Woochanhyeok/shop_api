@@ -50,7 +50,7 @@ close VARCHAR(10) NOT NULL
 
 API 사용 가이드
 ==============
-점포  API
+점포 등록 API
 ---------------
 * localhost:8080/register/shop
   - POST 방식
