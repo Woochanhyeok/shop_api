@@ -169,7 +169,7 @@ API 사용 가이드
 },
 {
 "name": "shop2",
-"description": "인천소래포구 종합어시장 갑각류센터 인어수산",
+"description": "두번째 점포",
 "level": 2,
 "businessStatus": "HOLIDAY"
 }
