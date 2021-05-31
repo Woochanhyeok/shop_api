@@ -1,5 +1,3 @@
-# thepirates
-
 설치 및 환경설정 가이드
 =====================
 * IntelliJ IDEA
@@ -14,7 +12,7 @@
 * API Test
   - Postman
 * 설치
-  - git clone https://github.com/Woochanhyeok/thepirates.git
+  - git clone https://github.com/Woochanhyeok/shop_api.git
 * DB
   - h2
     1. h2 콘솔 실행
@@ -59,12 +57,12 @@ API 사용 가이드
 * 요청
 <pre><code>
 {
-"name": "인어수산",
-"owner": "장인어",
-"description": "인천소래포구 종합어시장 갑각류센터 인어수산",
+"name": "shop1",
+"owner": "우찬혁",
+"description": "첫번째 점포",
 "level": 2,
-"address": "인천광역시 남동구 논현동 680-1 소래포구 종합어시장 1 층 1호",
-"phone": "010-1111-2222",
+"address": "경기도 남양주시",
+"phone": "010-1234-1234",
 "businessTimes": [
 {
 "day": "Monday",
@@ -96,11 +94,11 @@ API 사용 가이드
 </code></pre>
 <pre><code>
 {
-"name": "해적수산",
-"owner": "박해적",
-"description": "노량진 시장 광어, 참돔 등 싱싱한 고퀄 활어 전문 횟집",
+"name": "shop2",
+"owner": "찬혁",
+"description": "두번째 점포",
 "level": 1,
-"address": "서울 동작구 노량진동 13-8 노량진수산시장 활어 001",
+"address": "경기도 남양주시",
 "phone": "010-1234-1234",
 "businessTimes": [
 {
@@ -164,13 +162,13 @@ API 사용 가이드
 <pre><code>
 [
 {
-"name": "해적수산",
-"description": "노량진 시장 광어, 참돔 등 싱싱한 고퀄 활어 전문 횟집",
+"name": "shop1",
+"description": "첫번째 점포",
 "level": 1,
 "businessStatus": "OPEN"
 },
 {
-"name": "인어수산",
+"name": "shop2",
 "description": "인천소래포구 종합어시장 갑각류센터 인어수산",
 "level": 2,
 "businessStatus": "HOLIDAY"
